@@ -1,19 +1,19 @@
 import {
   addDays,
   startOfMonth,
+  endOfMonth,
   getDay,
-  getDate,
-  getMonth,
-  getYear,
-  getDaysInMonth,
   eachDayOfInterval,
-  format
+  format,
+  isSameDay
 } from 'date-fns'
-// import { Fragment } from 'react'
 
 export default function Body({ currentDate, selectedDate, setSelectedDate }) {
   // get the first day of the current month
   const startDate = startOfMonth(currentDate)
+
+  // get the last day of the current month
+  const endDate = endOfMonth(currentDate)
 
   // get the weekday of the first day of the month (0 for Sunday)
   const startWeekday = getDay(startDate)
@@ -27,38 +27,38 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
     end: startDate
   })
 
-  // convert selectedDate to Number
-  const formattedSelectedDate = Number(format(selectedDate, 'd'))
-  
+  const wholeMonth = eachDayOfInterval({ start: startDate, end: endDate })
+
   // focus selected date
-  const handleSelected = (i) => {
-    const date = new Date(getYear(selectedDate), getMonth(selectedDate) - 1, i)
+  const handleSelected = (date) => {
     setSelectedDate(date)
   }
-
-  // const date = new Date(getYear(selectedDate), getMonth(selectedDate) - 1, i)
 
   // don't display days that are not the same month
   const subtractDays = Array.from(
     { length: subtractNotSameMonth.length - 1 },
     (_, i) => <div key={i} />
   )
-  const days = Array.from({ length: getDaysInMonth(currentDate) }, (_, i) => (
-    <div
-      key={i}
-      className={`body_day_text ${
-        i + 1 === formattedSelectedDate ? 'selected' : ''
-      }`}
-      onClick={() => handleSelected(i + 1)}>
-      {i + 1}
-    </div>
-  ))
+
+  const all = []
+  for (let i = 0; i < wholeMonth.length; i++) {
+    all.push(
+      <div
+        key={i}
+        className={`body_day_text ${
+          isSameDay(wholeMonth[i], selectedDate) ? 'selected' : ''
+        }`}
+        onClick={() => handleSelected(wholeMonth[i])}>
+        {format(wholeMonth[i], 'd')}
+      </div>
+    )
+  }
 
   return (
     <div className='body'>
       <div className='body_day'>
         {subtractDays}
-        {days}
+        {all}
       </div>
     </div>
   )

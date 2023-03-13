@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { format, subMonths, addMonths, isAfter, isBefore } from 'date-fns'
 
-// import { allData } from '../data/allData'
+import { allData } from '../data/allData'
 
 import Header from './Header'
 import SubHeader from './SubHeader'
