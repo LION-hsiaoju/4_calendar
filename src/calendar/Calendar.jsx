@@ -15,8 +15,6 @@ export default function Calendar() {
   const minDate = new Date('2016-12-01')
   const maxDate = new Date('2018-12-31')
 
-  // const [currentDate, setCurrentDate] = useState(new Date())
-
   const [currentDate, setCurrentDate] = useState(new Date(...initialDate))
   const [selectedDate, setSelectedDate] = useState(new Date(2017, 6, 18))
 
