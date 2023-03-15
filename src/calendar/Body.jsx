@@ -1,3 +1,5 @@
+import { allData, getEventDetail } from '../data/allData'
+
 import {
   addDays,
   startOfMonth,
@@ -27,12 +29,11 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
     end: startDate
   })
 
+  // 得到整個月的所有 new Date()
   const wholeMonth = eachDayOfInterval({ start: startDate, end: endDate })
 
   // focus selected date
-  const handleSelected = (date) => {
-    setSelectedDate(date)
-  }
+  const handleSelected = (date) => setSelectedDate(date)
 
   // don't display days that are not the same month
   const subtractDays = Array.from(
@@ -40,57 +41,77 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
     (_, i) => <div key={i} />
   )
 
-  const all = []
-  for (let i = 0; i < wholeMonth.length; i++) {
-    all.push(
+  let all = wholeMonth.map((day, index) => {
+    const detail = getEventDetail(allData, day)
+
+    // 如果一天有超過一個行程，價格由低至高排列，只顯示最便宜的
+    const sortPrice = detail.sort((a, b) => a.price - b.price)
+
+    return (
       <div
-        key={i}
-        className={`body_day_text ${
-          isSameDay(wholeMonth[i], selectedDate) ? 'selected' : ''
-        }`}
-        onClick={() => handleSelected(wholeMonth[i])}>
-        {format(wholeMonth[i], 'd')}
+        key={index}
+        className={`body_day ${isSameDay(day, selectedDate) ? 'selected' : ''}`}
+        onClick={() => handleSelected(day)}>
+        <div className='body_day_content'>
+          {format(day, 'd')}
+          {detail.length < 2 &&
+            detail.map((_, index) => (
+              <div key={index} className='guaranteed'>
+                成團
+              </div>
+            ))}
+        </div>
+
+        {detail.length === 1 &&
+          detail.map((item, index) => (
+            <div key={index}>
+              <p
+                className={`body_day_content_text ${
+                  item.status === '預定' || item.status === '報名'
+                    ? 'orange'
+                    : ''
+                } ${item.status === '後補' ? 'green' : ''} ${
+                  item.status === '額滿' || item.status === '截止' ? 'gray' : ''
+                }`}>
+                {item.status}
+              </p>
+              <p>可賣：{item.availableVancancy}</p>
+              <p>席次：{item.totalVacnacy}</p>
+              <p className='red'>
+                {item.price.toLocaleString('zh-tw', {
+                  style: 'currency',
+                  currency: 'TWD',
+                  maximumSignificantDigits: 4
+                })}
+              </p>
+            </div>
+          ))}
+
+        {detail.length > 1 && (
+          <>
+            <p className='body_day_content_more'>
+              <span>看更多產品</span>
+              <ion-icon name='caret-forward-outline' />
+            </p>
+            <br />
+            <p className='red'>
+              {sortPrice[0].price.toLocaleString('zh-tw', {
+                style: 'currency',
+                currency: 'TWD',
+                maximumSignificantDigits: 4
+              })}
+              <span> 起</span>
+            </p>
+          </>
+        )}
       </div>
     )
-  }
+  })
 
   return (
     <div className='body'>
-      <div className='body_day'>
-        {subtractDays}
-        {all}
-      </div>
+      {subtractDays}
+      {all}
     </div>
   )
-}
-
-{
-  /* <ul className='calendars_daysWrap'>
-        <li className='calendars_days hasData'>
-          <div className='date'>
-            <span className='num'>1</span>
-            <span className='weekday'>星期四</span>
-          </div>
-          <span className='status'>候補</span>
-          <span className='sell'>可賣：0</span>
-          <span className='group'>團位：0</span>
-          <span className='tip'>
-            <i></i>保證出團
-          </span>
-          <span className='price'>$4,999</span>
-        </li>
-        <li className='calendars_days hasData'>
-          <div className='date'>
-            <span className='num'>1</span>
-            <span className='weekday'>星期五</span>
-          </div>
-          <span className='status'>候補</span>
-          <span className='sell'>可賣：0</span>
-          <span className='group'>團位：0</span>
-          <span className='tip'>
-            <i className='ic-ln productreferf'></i>保證出團
-          </span>
-          <span className='price'>$4,999</span>
-        </li>
-      </ul> */
 }
