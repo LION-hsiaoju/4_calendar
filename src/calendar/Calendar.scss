@@ -3,10 +3,30 @@ $red: #dc1a1a;
 $green: #24a07c;
 $orange: #ff7800;
 $blue: #0d75b6;
+$gray: #aaa;
 $border: #eee;
 $selectedBorder: #0ebc3d;
 $selectedBackgroundColor: #fffdcd;
 $lightGray: #f6f6f6;
+
+.red {
+  color: $red;
+}
+.orange {
+  color: $orange;
+}
+.green {
+  color: $green;
+}
+.gray {
+  color: $gray;
+}
+
+.selected.selected.selected {
+  z-index: 10;
+  outline: 3px solid $selectedBorder;
+  background-color: $selectedBackgroundColor;
+}
 
 // calendar styles
 .calendar {
@@ -55,29 +75,46 @@ $lightGray: #f6f6f6;
   }
 
   .body {
-    display: grid;
     border: 1px solid $border;
     background-color: $lightGray;
-    
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
     &_day {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      height: 7rem;
+      padding: 0 0 0.5rem 0.2rem;
+      border: 0.5px solid $border;
+      background-color: white;
+      font-size: 0.9rem;
 
-      &_text {
-        height: 5.5rem;
-        padding: 0 0.5rem 0.5rem 0.2rem;
-        border: 0.5px solid $border;
-        background-color: white;
-        font-size: 0.9rem;
-
-        &:focus {
-          border: 3px solid $selectedBorder;
-          background-color: $selectedBackgroundColor;
-        }
-      }
-      .selected {
-        border: 3px solid $selectedBorder;
+      &:hover {
+        cursor: pointer;
         background-color: $selectedBackgroundColor;
+      }
+
+      &_content {
+        display: flex;
+        justify-content: space-between;
+
+        &_text {
+          padding-top: 0.2rem;
+          line-height: 1;
+        }
+
+        &_more {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: $blue;
+          transform: translate(0, 100%);
+        }
+
+        .guaranteed {
+          width: 50%;
+          padding: 0.1rem 0.5rem;
+          color: white;
+          background-color: $orange;
+        }
       }
     }
   }
