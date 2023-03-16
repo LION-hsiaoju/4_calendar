@@ -14,7 +14,7 @@ let newData2 = data2.map(({ certain, date, price, onsell, total, state }) => ({
   status: state
 }))
 
-const data = [...data1, ...newData2, ...data3, ...data4]
+export const allData = [...data1, ...newData2, ...data3, ...data4]
   .map((item) => {
     return {
       guaranteed: item.guaranteed,
@@ -25,8 +25,6 @@ const data = [...data1, ...newData2, ...data3, ...data4]
       status: item.status
     }
   })
-  // 把所有資料照日期排
-  .sort((a, b) => a.date - b.date)
 
 // 如果資料裡有符合「這個月的日期」的團的話
 // 回傳一個「這個日期的所有團」的 result 陣列
@@ -35,4 +33,3 @@ export const getEventDetail = (arr, day) => {
   return result
 }
 
-export const allData = data

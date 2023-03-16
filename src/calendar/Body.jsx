@@ -41,6 +41,7 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
     (_, i) => <div key={i} />
   )
 
+  // render 整個月並加上活動資料
   let all = wholeMonth.map((day, index) => {
     const detail = getEventDetail(allData, day)
 
@@ -62,6 +63,7 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
             ))}
         </div>
 
+        {/* 當天只有一個團 */}
         {detail.length === 1 &&
           detail.map((item, index) => (
             <div key={index}>
@@ -76,7 +78,7 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
                 {item.status}
               </p>
               <p>可賣：{item.availableVancancy}</p>
-              <p>席次：{item.totalVacnacy}</p>
+              <p>團位：{item.totalVacnacy}</p>
               <p className='red'>
                 {item.price.toLocaleString('zh-tw', {
                   style: 'currency',
@@ -87,10 +89,11 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
             </div>
           ))}
 
+        {/* 當天超過一個團 */}
         {detail.length > 1 && (
           <>
             <p className='body_day_content_more'>
-              <span>看更多產品</span>
+              <span>看更多團</span>
               <ion-icon name='caret-forward-outline' />
             </p>
             <br />
