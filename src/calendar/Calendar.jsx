@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { format, subMonths, addMonths, isAfter, isBefore } from 'date-fns'
-
-import { allData } from '../data/allData'
+import { addMonths } from 'date-fns'
 
 import Header from './Header'
 import SubHeader from './SubHeader'
@@ -11,33 +9,57 @@ import Body from './Body'
 const initialDate = [2017, 5, 15]
 
 export default function Calendar() {
-  // data.json date: 2016-11 ~ 2018-12
-  const minDate = new Date('2016-12-01')
-  const maxDate = new Date('2018-12-31')
-
   const [currentDate, setCurrentDate] = useState(new Date(...initialDate))
-  const [selectedDate, setSelectedDate] = useState(new Date(2017, 6, 18))
+  const [selectedDate, setSelectedDate] = useState(new Date(null))
 
-  const currentMonth = format(currentDate, 'yyyy MM月')
-  const prevMonth = format(addMonths(currentDate, -1), 'yyyy MM月')
-  const nextMonth = format(addMonths(currentDate, 1), 'yyyy MM月')
+  const prevMonth = addMonths(currentDate, -1)
+  const currentMonth = addMonths(currentDate, 0)
+  const nextMonth = addMonths(currentDate, 1)
+
+  const [shownMonth, setShownMonth] = useState([
+    prevMonth,
+    currentMonth,
+    nextMonth
+  ])
+
+  const [activeTab, setActiveTab] = useState(1)
+
+  const handleSelectedMonth = (index) => {
+    setActiveTab(index)
+    setCurrentDate(shownMonth[index])
+  }
 
   const handlePrevMonth = () => {
-    const date = subMonths(currentDate, 1)
-    if (isBefore(date, minDate)) return
+    const date = addMonths(currentDate, -1)
+    setShownMonth([date, currentMonth, nextMonth])
     setCurrentDate(date)
+    if (activeTab === 1) {
+      setActiveTab(0)
+    } else if (activeTab === 2) {
+      setActiveTab(1)
+      setShownMonth([addMonths(date, -1), date, currentMonth])
+    }
   }
 
   const handleNextMonth = () => {
     const date = addMonths(currentDate, 1)
-    if (isAfter(date, maxDate)) return
+    setShownMonth([prevMonth, currentMonth, date])
     setCurrentDate(date)
+    if (activeTab === 1) {
+      setActiveTab(2)
+    } else if (activeTab === 0) {
+      setActiveTab(1)
+      setShownMonth([currentMonth, date, addMonths(date, 1)])
+    }
   }
 
   const props = {
-    currentMonth,
-    prevMonth,
-    nextMonth,
+    shownMonth,
+    activeTab,
+    setActiveTab,
+    setCurrentDate,
+    setShownMonth,
+    handleSelectedMonth,
     handlePrevMonth,
     handleNextMonth
   }
