@@ -83,7 +83,7 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
                 {item.price.toLocaleString('zh-tw', {
                   style: 'currency',
                   currency: 'TWD',
-                  maximumSignificantDigits: 4
+                  minimumFractionDigits: 0
                 })}
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function Body({ currentDate, selectedDate, setSelectedDate }) {
               {sortPrice[0].price.toLocaleString('zh-tw', {
                 style: 'currency',
                 currency: 'TWD',
-                maximumSignificantDigits: 4
+                minimumFractionDigits: 0
               })}
               <span> 起</span>
             </p>
