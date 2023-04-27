@@ -16,7 +16,9 @@ export default function Header({ props }) {
 
   return (
     <div className='header'>
-      <button className='header_arrow' onClick={props.handlePrevMonth}>
+      <button
+        className='header_arrow'
+        onClick={() => props.handleSwitchMonth('prev')}>
         <ion-icon name='caret-back-outline'></ion-icon>
       </button>
 
@@ -41,7 +43,9 @@ export default function Header({ props }) {
         ))}
       </div>
 
-      <button className='header_arrow' onClick={props.handleNextMonth}>
+      <button
+        className='header_arrow'
+        onClick={() => props.handleSwitchMonth('next')}>
         <ion-icon name='caret-forward-outline'></ion-icon>
       </button>
     </div>

@@ -29,27 +29,33 @@ export default function Calendar() {
     setCurrentDate(shownMonth[index])
   }
 
-  const handlePrevMonth = () => {
-    const date = addMonths(currentDate, -1)
-    setShownMonth([date, currentMonth, nextMonth])
+  const handleSwitchMonth = (type) => {
+    let index = type === 'prev' ? -1 : 1
+    const date = addMonths(currentDate, index)
     setCurrentDate(date)
-    if (activeTab === 1) {
-      setActiveTab(0)
-    } else if (activeTab === 2) {
-      setActiveTab(1)
-      setShownMonth([addMonths(date, -1), date, currentMonth])
-    }
-  }
 
-  const handleNextMonth = () => {
-    const date = addMonths(currentDate, 1)
-    setShownMonth([prevMonth, currentMonth, date])
-    setCurrentDate(date)
-    if (activeTab === 1) {
-      setActiveTab(2)
-    } else if (activeTab === 0) {
-      setActiveTab(1)
-      setShownMonth([currentMonth, date, addMonths(date, 1)])
+    switch (type) {
+      case 'prev':
+        setShownMonth([date, currentMonth, nextMonth])
+        if (activeTab === 1) {
+          setActiveTab(0)
+        } else if (activeTab === 2) {
+          setActiveTab(1)
+          setShownMonth([addMonths(date, -1), date, currentMonth])
+        }
+        break
+
+      case 'next':
+        setShownMonth([prevMonth, currentMonth, date])
+        if (activeTab === 1) {
+          setActiveTab(2)
+        } else if (activeTab === 0) {
+          setActiveTab(1)
+          setShownMonth([currentMonth, date, addMonths(date, 1)])
+        }
+        break
+      default:
+        break
     }
   }
 
@@ -60,8 +66,7 @@ export default function Calendar() {
     setCurrentDate,
     setShownMonth,
     handleSelectedMonth,
-    handlePrevMonth,
-    handleNextMonth
+    handleSwitchMonth
   }
 
   return (
